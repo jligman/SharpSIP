@@ -1,0 +1,122 @@
+﻿<Window x:Class="SharpSIP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="SharpSIP Softphone" Height="700" Width="480"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="6"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Padding" Value="3,2"/>
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Padding" Value="3,2"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="MinWidth" Value="75"/>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel Margin="6">
+
+        <!-- ── Account Settings ──────────────────────────────────────── -->
+        <GroupBox DockPanel.Dock="Top" Header="Account Settings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="SIP Server:"/>
+                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtServer"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Username:"/>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtUsername"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Password:"/>
+                <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="PbPassword"/>
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Display Name:"/>
+                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtDisplayName"/>
+
+                <StackPanel Grid.Row="4" Grid.Column="1"
+                            Orientation="Horizontal" HorizontalAlignment="Right"
+                            Margin="0,6,0,0">
+                    <Button x:Name="BtnRegister"   Content="Register"   Click="BtnRegister_Click"/>
+                    <Button x:Name="BtnUnregister" Content="Unregister" Click="BtnUnregister_Click"
+                            IsEnabled="False"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- ── Registration Status ──────────────────────────────────── -->
+        <GroupBox DockPanel.Dock="Top" Header="Status">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="State:"/>
+                <Label x:Name="LblStatus" Content="Idle" FontWeight="Bold" Foreground="Gray"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- ── Dial + Call Controls ─────────────────────────────────── -->
+        <GroupBox DockPanel.Dock="Top" Header="Call">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,2">
+                    <Label Content="Number:"/>
+                    <TextBox x:Name="TxtDialNumber" Width="200" Margin="0,2"/>
+                    <Button x:Name="BtnCall" Content="Call" Click="BtnCall_Click"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,4">
+                    <Label Content="Active call:"/>
+                    <Label x:Name="LblCallStatus" Content="—" FontWeight="Bold" Foreground="Gray"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,4">
+                    <Button x:Name="BtnAnswer" Content="Answer" Click="BtnAnswer_Click"
+                            IsEnabled="False" Background="#DFF0D8"/>
+                    <Button x:Name="BtnReject" Content="Reject" Click="BtnReject_Click"
+                            IsEnabled="False" Background="#F2DEDE"/>
+                    <Button x:Name="BtnHangUp" Content="Hang Up" Click="BtnHangUp_Click"
+                            IsEnabled="False" Background="#FCF8E3"/>
+                    <ToggleButton x:Name="TglMute" Content="Mute" Click="TglMute_Click"
+                                  IsEnabled="False" Margin="3" Padding="10,4" MinWidth="75"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- ── Event Log ─────────────────────────────────────────────── -->
+        <GroupBox DockPanel.Dock="Bottom" Header="Event Log">
+            <ListBox x:Name="LstLog"
+                     Height="160"
+                     FontFamily="Consolas"
+                     FontSize="11"
+                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     VirtualizingStackPanel.IsVirtualizing="True"
+                     VirtualizingStackPanel.VirtualizationMode="Recycling"/>
+        </GroupBox>
+
+    </DockPanel>
+</Window>
