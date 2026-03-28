@@ -8,14 +8,22 @@ namespace SharpSIP;
 /// </summary>
 public partial class App : Application
 {
+    private SoftphoneService? _softphone;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
         var logger = new AppLogger(Dispatcher);
-        var softphone = new SoftphoneService(logger);
+        _softphone  = new SoftphoneService(logger);
 
-        var window = new MainWindow(softphone, logger);
+        var window = new MainWindow(_softphone, logger);
         window.Show();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _softphone?.Dispose();
+        base.OnExit(e);
     }
 }

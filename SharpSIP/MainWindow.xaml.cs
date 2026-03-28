@@ -53,7 +53,7 @@ public partial class MainWindow : Window
         _softphone.Unregister();
     }
 
-    private void BtnCall_Click(object sender, RoutedEventArgs e)
+    private async void BtnCall_Click(object sender, RoutedEventArgs e)
     {
         var number = TxtDialNumber.Text.Trim();
         if (string.IsNullOrEmpty(number))
@@ -62,12 +62,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        _softphone.Call(number);
+        await _softphone.Call(number);
     }
 
-    private void BtnAnswer_Click(object sender, RoutedEventArgs e)
+    private async void BtnAnswer_Click(object sender, RoutedEventArgs e)
     {
-        _softphone.Answer();
+        await _softphone.Answer();
     }
 
     private void BtnReject_Click(object sender, RoutedEventArgs e)
