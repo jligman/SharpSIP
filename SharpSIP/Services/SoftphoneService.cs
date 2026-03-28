@@ -67,7 +67,10 @@ public class SoftphoneService : IDisposable
     /// <summary>Register the softphone with the SIP server.</summary>
     public void Register(SipSettings settings)
     {
-        _currentSettings = settings;
+        // Normalize before storing so the clean value is used for calls too.
+        settings.SipServer = NormalizeServer(settings.SipServer);
+        _currentSettings   = settings;
+
         _logger.Log($"Registering {settings.Username}@{settings.SipServer}...");
         SetState(PhoneState.Registering);
 
@@ -385,6 +388,30 @@ public class SoftphoneService : IDisposable
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Strips any URL/SIP scheme prefix from a server address typed by the user,
+    /// so that "https://host:5001/path" or "sip:host" becomes "host:5001" / "host".
+    /// SIPSorcery's URI parser expects a bare host[:port] string here.
+    /// </summary>
+    private static string NormalizeServer(string server)
+    {
+        var s = server.Trim();
+
+        // Use .NET's Uri class to extract host[:port] from any full URL the user may
+        // have pasted (e.g., "https://host:5001/path").  This handles IPv6 brackets,
+        // trailing paths, and query strings correctly without manual string-slicing.
+        if (Uri.TryCreate(s, UriKind.Absolute, out var uri) && !string.IsNullOrEmpty(uri.Host))
+            return uri.Authority;   // "host", "host:port", or "[::1]:port" for IPv6
+
+        // Bare "sip:" or "sips:" prefix with no authority separator (//).
+        if (s.StartsWith("sip:", StringComparison.OrdinalIgnoreCase))
+            s = s[4..].Trim();
+        else if (s.StartsWith("sips:", StringComparison.OrdinalIgnoreCase))
+            s = s[5..].Trim();
+
+        return s;
+    }
 
     /// <summary>
     /// Returns the appropriate idle state after a call ends.
